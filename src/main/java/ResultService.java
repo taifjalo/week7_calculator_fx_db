@@ -26,7 +26,7 @@ public class ResultService {
                 "?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
     }
 
-    public static void saveResult(double n1, double n2, double sum, double product) {
+    public static void saveResult(double n1, double n2, double sum, double product, double difference, double quotient) {
         String dbUrl = getDatabaseUrl();
 
         try (Connection conn = DriverManager.getConnection(dbUrl, DB_USER, DB_PASSWORD);
@@ -40,22 +40,26 @@ public class ResultService {
                     number2 DOUBLE NOT NULL,
                     sum_result DOUBLE NOT NULL,
                     product_result DOUBLE NOT NULL,
+                    difference_result DOUBLE NOT NULL,
+                    quotient_result DOUBLE NOT NULL,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
                 """;
             stmt.executeUpdate(createTable);
 
             // Insert the result
-            String insert = "INSERT INTO calc_results (number1, number2, sum_result, product_result) VALUES (?, ?, ?, ?)";
+            String insert = "INSERT INTO calc_results (number1, number2, sum_result, product_result, difference_result, quotient_result) VALUES (?, ?, ?, ?, ?, ?)";
             try (PreparedStatement ps = conn.prepareStatement(insert)) {
                 ps.setDouble(1, n1);
                 ps.setDouble(2, n2);
                 ps.setDouble(3, sum);
                 ps.setDouble(4, product);
+                ps.setDouble(5, difference);
+                ps.setDouble(6, quotient);
                 ps.executeUpdate();
             }
 
-            System.out.println("✅ Result saved: " + n1 + ", " + n2 + " → Sum=" + sum + ", Product=" + product);
+            System.out.println("✅ Result saved: " + n1 + ", " + n2 + " → Sum=" + sum + ", Product=" + product + ", Difference=" + difference + ", Quotient=" + quotient);
 
 
         } catch (SQLException e) {
