@@ -69,6 +69,7 @@ pipeline {
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
                     bat 'docker login -u %DOCKER_USER% -p %DOCKER_PASS%'
+                    bat 'docker image tag %DOCKERHUB_REPO%:%DOCKER_IMAGE_TAG% %DOCKERHUB_REPO%:%DOCKER_IMAGE_TAG%'
                     bat 'docker push %DOCKERHUB_REPO%:%DOCKER_IMAGE_TAG%'
                     bat 'docker logout'
                 }
