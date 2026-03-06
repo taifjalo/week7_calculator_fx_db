@@ -3,8 +3,12 @@ pipeline {
 
     environment {
         PATH = "C:\\Program Files\\Docker\\Docker\\resources\\bin;${env.PATH}"
+
+        // Define Docker Hub credentials ID
         DOCKERHUB_CREDENTIALS_ID = 'Docker_Hub'
+        // Define Docker Hub repository name
         DOCKERHUB_REPO = 'taifjalo1/sum-product_fx'
+        // Define Docker image tag
         DOCKER_IMAGE_TAG = 'latest'
     }
 
@@ -21,7 +25,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/taifjalo/week7_calculator_fx_db.git'
+                git branch: 'main', url: 'https://github.com/taifjalo/week7_calculator_fx_db.git' //CHECK THE GITHUB REPO
             }
         }
 
@@ -45,7 +49,7 @@ pipeline {
 
         stage('Publish Test Results') {
             steps {
-                junit allowEmptyResults: true, testResults: '**/target/surefire-reports/*.xml'
+                junit '**/target/surefire-reports/*.xml'
             }
         }
 
@@ -57,16 +61,17 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                bat 'set DOCKER_BUILDKIT=0 && docker build --provenance=false -t %DOCKERHUB_REPO%:%DOCKER_IMAGE_TAG% .'
+                bat 'docker build -t %DOCKERHUB_REPO%:%DOCKER_IMAGE_TAG% .'
             }
         }
 
         stage('Push Docker Image to Docker Hub') {
             steps {
-                script {
-                    docker.withRegistry('https://index.docker.io/v1/', env.DOCKERHUB_CREDENTIALS_ID) {
-                        docker.image("${DOCKERHUB_REPO}:${DOCKER_IMAGE_TAG}").push()
-                    }
+                withCredentials([usernamePassword(credentialsId: "${DOCKERHUB_CREDENTIALS_ID}", usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    bat '''
+                        docker login -u %DOCKER_USER% -p %DOCKER_PASS%
+                        docker push %DOCKERHUB_REPO%:%DOCKER_IMAGE_TAG%
+                    '''
                 }
             }
         }
