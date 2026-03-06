@@ -61,7 +61,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                bat 'docker build --provenance=false -t %DOCKERHUB_REPO%:%DOCKER_IMAGE_TAG% .'
+                bat 'set DOCKER_BUILDKIT=0 && docker build -t %DOCKERHUB_REPO%:%DOCKER_IMAGE_TAG% .'
             }
         }
 
