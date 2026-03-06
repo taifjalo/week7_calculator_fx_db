@@ -3,7 +3,12 @@ pipeline {
 
     environment {
         PATH = "C:\\Program Files\\Docker\\Docker\\resources\\bin;${env.PATH}"
+
+        // Define Docker Hub credentials ID
+        DOCKERHUB_CREDENTIALS_ID = 'Docker_Hub'
+        // Define Docker Hub repository name
         DOCKERHUB_REPO = 'taifjalo1/sum-product_fx'
+        // Define Docker image tag
         DOCKER_IMAGE_TAG = 'latest'
     }
 
@@ -20,7 +25,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/taifjalo/week7_calculator_fx_db.git'
+                git branch: 'main', url: 'https://github.com/taifjalo/week7_calculator_fx_db.git' //CHECK THE GITHUB REPO
             }
         }
 
@@ -63,7 +68,7 @@ pipeline {
         stage('Push Docker Image to Docker Hub') {
             steps {
                 withCredentials([usernamePassword(
-                    credentialsId: 'Docker_Hub',
+                    credentialsId: '5005ab2d-4cd7-489a-8b0b-4edc13dadc81',
                     usernameVariable: 'DOCKER_USER',
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
