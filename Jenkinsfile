@@ -3,12 +3,8 @@ pipeline {
 
     environment {
         PATH = "C:\\Program Files\\Docker\\Docker\\resources\\bin;${env.PATH}"
-
-        // Define Docker Hub credentials ID
         DOCKERHUB_CREDENTIALS_ID = 'Docker_Hub'
-        // Define Docker Hub repository name
         DOCKERHUB_REPO = 'taifjalo1/sum-product_fx'
-        // Define Docker image tag
         DOCKER_IMAGE_TAG = 'latest'
     }
 
@@ -25,7 +21,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/taifjalo/week7_calculator_fx_db.git' //CHECK THE GITHUB REPO
+                git branch: 'main', url: 'https://github.com/taifjalo/week7_calculator_fx_db.git'
             }
         }
 
@@ -49,7 +45,7 @@ pipeline {
 
         stage('Publish Test Results') {
             steps {
-                junit '**/target/surefire-reports/*.xml'
+                junit allowEmptyResults: true, testResults: '**/target/surefire-reports/*.xml'
             }
         }
 
@@ -61,7 +57,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t %DOCKERHUB_REPO%:%DOCKER_IMAGE_TAG% .'
+                bat 'set DOCKER_BUILDKIT=0 && docker build --provenance=false -t %DOCKERHUB_REPO%:%DOCKER_IMAGE_TAG% .'
             }
         }
 
