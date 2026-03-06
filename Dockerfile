@@ -30,4 +30,4 @@ RUN ls -l target
 COPY target/sum-product_fx-1.0-SNAPSHOT.jar app.jar
 
 # Run the **shaded JAR** with JavaFX modules
-CMD ["java", "--module-path", "/opt/javafx-sdk-21/lib", "--add-modules", "javafx.controls,javafx.fxml", "-jar", "target/sum-product_fx-1.0-SNAPSHOT.jar"]
+CMD ["java", "--module-path", "/opt/javafx-sdk-21/lib", "--add-modules", "javafx.controls,javafx.fxml", "-jar", "app.jar"]
