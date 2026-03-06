@@ -3,6 +3,7 @@ version: '3.8'
 services:
   db:
     image: mariadb:11
+    # cmd: docker exec -it calculator-db mariadb -u root -pTest12 calc_data -e "SELECT * FROM calc_results;"
     container_name: calculator-db
     restart: always
     environment:
